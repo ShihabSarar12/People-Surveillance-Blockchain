@@ -9,18 +9,18 @@ class BlockchainRepository {
         this.pool = pool;
     }
 
-    public async getAllUsers(): Promise<User[] | null> {
+    public getAllUsers = async (): Promise<User[] | null> => {
         const [users] = await this.pool.query<User[]>(`SELECT * FROM users`);
         return users.length > 0 ? users : null;
-    }
+    };
 
-    public async getUserById(id: number): Promise<User | null> {
+    public getUserById = async (id: number): Promise<User | null> => {
         const [[user]] = await this.pool.query<User[]>(
             `SELECT * FROM users WHERE id = ?`,
             [id]
         );
         return user ?? null;
-    }
+    };
 }
 
 export default new BlockchainRepository();

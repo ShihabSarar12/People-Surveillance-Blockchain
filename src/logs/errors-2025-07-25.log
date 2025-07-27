@@ -1,0 +1,12 @@
+2025-07-25 20:45:04 [error]: Error: 
+    at PromisePool.query (D:\VS Code\PeopleSurveillance_v2\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at BlockchainRepository.<anonymous> (D:\VS Code\PeopleSurveillance_v2\src\repositories\blockchain.repository.ts:18:42)
+    at Generator.next (<anonymous>)
+    at D:\VS Code\PeopleSurveillance_v2\src\repositories\blockchain.repository.ts:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (D:\VS Code\PeopleSurveillance_v2\src\repositories\blockchain.repository.ts:4:12)
+    at BlockchainRepository.getUserById (D:\VS Code\PeopleSurveillance_v2\src\repositories\blockchain.repository.ts:17:69)
+    at BlockchainService.<anonymous> (D:\VS Code\PeopleSurveillance_v2\src\services\blockchain.service.ts:12:62)
+    at Generator.next (<anonymous>)
+    at D:\VS Code\PeopleSurveillance_v2\src\services\blockchain.service.ts:8:71
+2025-07-25 20:45:04 [error]: An error occurred.

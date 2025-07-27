@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Express API with TypeScript",
+    "version": "1.0.0",
+    "description": "A simple API documentation for Express and TypeScript"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/api/blockchain/users/{id}": {
+      "get": {
+        "summary": "Get user data by ID",
+        "description": "Retrieve user data from the blockchain by user ID",
+        "tags": [
+          "Blockchain"
+        ],
+        "responses": {
+          "200": {
+            "description": "A single user object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "description": "Must be a valid email address and unique"
+                    },
+                    "password": {
+                      "type": "string",
+                      "format": "password",
+                      "minLength": 6,
+                      "description": "Must be a valid password that contains One uppercase letter, one lowercase letter, one number, and one special character. Minimum length is 6."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid user ID"
+          },
+          "404": {
+            "description": "User with the given ID not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "tags": [
+    {
+      "name": "Blockchain",
+      "description": "API to manage blockchain operations"
+    }
+  ]
+}
