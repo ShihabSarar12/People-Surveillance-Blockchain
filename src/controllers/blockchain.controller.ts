@@ -2,7 +2,7 @@ import blockchainService from '../services/blockchain.service';
 import { Request, Response } from 'express';
 import User from '../models/user.model';
 import asyncHandler from 'express-async-handler';
-import HTTP_STATUS from '../constants/status.constant';
+import HttpStatus from '../constants/status.constant';
 
 /**
  * @swagger
@@ -16,7 +16,7 @@ class BlockchainController {
     public initialize = asyncHandler(
         async (_: Request, res: Response): Promise<void> => {
             await blockchainService.initializeBlockchain();
-            res.status(HTTP_STATUS.OK).json({
+            res.status(HttpStatus.OK).json({
                 message: 'Blockchain controller initialized successfully',
             });
         }
@@ -60,7 +60,7 @@ class BlockchainController {
         async (req: Request, res: Response): Promise<void> => {
             const userId: number = parseInt(req.params.id);
             if (isNaN(userId)) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: 'Invalid user ID' });
+                res.status(HttpStatus.BAD_REQUEST).json({ error: 'Invalid user ID' });
                 return;
             }
 
@@ -68,13 +68,13 @@ class BlockchainController {
                 userId
             );
             if (!user) {
-                res.status(HTTP_STATUS.NOT_FOUND).json({
+                res.status(HttpStatus.NOT_FOUND).json({
                     error: `User with ID ${userId} not found`,
                 });
                 return;
             }
 
-            res.status(HTTP_STATUS.OK).json(user);
+            res.status(HttpStatus.OK).json(user);
         }
     );
 }

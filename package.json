@@ -7,7 +7,9 @@
     "migrate:up": "ts-node src/migrations/operations/run.migration.ts",
     "migrate:down": "ts-node src/migrations/operations/rollback.migration.ts",
     "migrate:status": "ts-node src/migrations/operations/status.migration.ts",
-    "migrate:reset": "ts-node src/migrations/operations/reset.migration.ts"
+    "migrate:reset": "ts-node src/migrations/operations/reset.migration.ts",
+    "test": "jest --detectOpenHandles --forceExit",
+    "git": "wsl bash ./src/scripts/git.sh"
   },
   "author": "",
   "license": "ISC",
@@ -16,11 +18,15 @@
     "@types/cors": "^2.8.19",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.15",
+    "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.1",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "class-transformer": "^0.5.1",
@@ -30,6 +36,7 @@
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
     "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
     "mysql2": "^3.14.2",
     "node-cron": "^4.2.1",
     "reflect-metadata": "^0.2.2",

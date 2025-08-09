@@ -6,8 +6,9 @@ import {
     errorLoggerConfig,
     prodFormat,
 } from '../configs/logger.config';
+import { NODE_ENV } from '../constants/env.constants';
 
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = NODE_ENV === 'production';
 
 const logger = createLogger({
     level: 'info',

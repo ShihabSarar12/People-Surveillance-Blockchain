@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import logger from '../utilities/logger.utility';
-import HTTP_STATUS from '../constants/status.constant';
+import HttpStatus from '../constants/status.constant';
+import { NODE_ENV } from '../constants/env.constants';
 
 class ErrorMiddleware {
     constructor() {}
@@ -13,16 +14,16 @@ class ErrorMiddleware {
     ): Response => {
         logger.error(err.stack);
         logger.error('An error occurred. ', err.message);
-        return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             message: 'An unexpected error occurred.',
-            ...(process.env.NODE_ENV !== 'production' && {
+            ...(NODE_ENV !== 'production' && {
                 error: err.message || 'Internal server error',
             }),
         });
     };
 
     public notFound = (_: Request, res: Response): Response => {
-        return res.status(HTTP_STATUS.NOT_FOUND).json({
+        return res.status(HttpStatus.NOT_FOUND).json({
             message: 'Resource not found.',
         });
     };

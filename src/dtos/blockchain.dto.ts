@@ -5,6 +5,7 @@ import {
     IsDateString,
     IsStrongPassword,
     IsNotEmpty,
+    IsOptional,
 } from 'class-validator';
 import IsDateTime from '../decorators/isDateTime.decorator';
 
@@ -27,6 +28,7 @@ class CreateUserDTO {
     eventTime!: string;
 
     @IsDateString()
+    @IsOptional()
     eventDate!: string;
 }
 
