@@ -14,6 +14,8 @@ const {
     PRIVATE_KEY,
     JWT_SECRET,
     JWT_EXPIRES_IN,
+    CONTRACT_ADDRESS,
+    ACCOUNT_PRIVATE_KEY,
 } = process.env;
 
 export {
@@ -28,4 +30,6 @@ export {
     PRIVATE_KEY,
     JWT_SECRET,
     JWT_EXPIRES_IN,
+    CONTRACT_ADDRESS,
+    ACCOUNT_PRIVATE_KEY,
 };

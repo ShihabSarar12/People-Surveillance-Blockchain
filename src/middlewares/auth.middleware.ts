@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import HttpStatus from '../constants/status.constant';
-import HttpError from '../utilities/httpError.utility';
 import authService, { SanitizedUser } from '../services/auth.service';
+import HttpError from '../errors/http.error';
 
 export type AuthenticatedRequest = Request & {
     user?: SanitizedUser;

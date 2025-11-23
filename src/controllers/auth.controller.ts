@@ -47,7 +47,11 @@ class AuthController {
     public register = asyncHandler(
         async (req: Request, res: Response): Promise<void> => {
             const { name, email, password } = req.body;
-            const authResponse = await authService.register(name, email, password);
+            const authResponse = await authService.register(
+                name,
+                email,
+                password
+            );
 
             res.status(HttpStatus.CREATED).json(authResponse);
         }

@@ -1,16 +1,25 @@
 import { Router } from 'express';
 import blockchainController from '../../controllers/blockchain.controller';
-import validateDTO from '../../middlewares/validateDTO.middleware';
-import CreateUserDTO from '../../dtos/blockchain.dto';
+import multer from 'multer';
+import multerConfig from '../../configs/multer.config';
 
 const blockchainRouter: Router = Router();
+const upload = multer(multerConfig);
 
-blockchainRouter.get('/message', blockchainController.initialize);
-blockchainRouter.post(
-    '/test',
-    validateDTO(CreateUserDTO),
-    blockchainController.initialize
+blockchainRouter.get(
+    '/retrieve-metadata',
+    blockchainController.retrieveMetaDataFromBlockchain
 );
-blockchainRouter.get('/user/:id', blockchainController.getUserData);
+
+blockchainRouter.post(
+    '/store-metadata',
+    blockchainController.storeCIDToBlockchain
+);
+
+blockchainRouter.post(
+    '/upload-video',
+    upload.single('video'),
+    blockchainController.uploadVideoToIPFS
+);
 
 export default blockchainRouter;

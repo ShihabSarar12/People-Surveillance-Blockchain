@@ -1,5 +1,4 @@
 import HttpStatus from '../../src/constants/status.constant';
-import HttpError from '../../src/utilities/httpError.utility';
 
 type AuthService = typeof import('../../src/services/auth.service').default;
 type MockUserRepository = {
@@ -87,9 +86,9 @@ describe('AuthService', () => {
             name: mockUser.name,
             email: mockUser.email,
         });
-        expect((result.user as unknown as Record<string, unknown>).password).toBe(
-            undefined
-        );
+        expect(
+            (result.user as unknown as Record<string, unknown>).password
+        ).toBe(undefined);
         expect(typeof result.token).toBe('string');
     });
 

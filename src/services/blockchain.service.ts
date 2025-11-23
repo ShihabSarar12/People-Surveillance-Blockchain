@@ -1,32 +1,114 @@
 import blockchainRepository from '../repositories/blockchain.repository';
 import User from '../models/user.model';
+import HttpError from '../errors/http.error';
+import { isInstance } from 'class-validator';
 import logger from '../utilities/logger.utility';
-import sanitizeHTMLConfig from '../configs/sanitizeHTML.config';
-import sanitize from 'sanitize-html';
+import HttpStatus from '../constants/status.constant';
+import ipfsRepository from '../repositories/ipfs.repository';
 
 type PublicUser = Omit<User, 'password'>;
 
 class BlockchainService {
     constructor() {}
 
-    public initializeBlockchain = async (): Promise<void> => {
-        logger.info('Blockchain initialized successfully');
+    public storeDataToBlockchain = async (data: number): Promise<string> => {
+        const receipt = await blockchainRepository.storeData(data);
+        return receipt ?? null;
     };
 
-    public getUserData = async (userId: number): Promise<PublicUser | null> => {
-        const user: User | null = await blockchainRepository.getUserById(
-            userId
-        );
-        if (!user) {
-            logger.error(`User with ID ${userId} not found`);
-            return null;
+    public retrieveDataFromBlockchain = async (): Promise<number> => {
+        const data = await blockchainRepository.retrieveData();
+        return data ?? null;
+    };
+
+    public retrieveLastMetaDataFromBlockchain = async (): Promise<{
+        cid: string;
+        timestamp: string;
+        uploader: string;
+    } | null> => {
+        try {
+            const index = await blockchainRepository.getLatestMetaDataIndex();
+            const result = await blockchainRepository.retrieveMetaData(index);
+            return result ?? null;
+        } catch (error: any) {
+            if (error instanceof HttpError) {
+                throw error;
+            }
+            logger.error(
+                'Service: Unexpected error occurred in retrieveMetaDataFromBlockchain',
+                {
+                    error: error?.message ?? error,
+                }
+            );
+            throw new HttpError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                'Failed to retrieve last meta data from blockchain'
+            );
         }
-        const { password: _, ...publicUser } = user;
-        return publicUser;
     };
 
-    public sanitizeQuery = (query: string): string => {
-        return sanitize(query, sanitizeHTMLConfig);
+    public storeCIDToBlockchain = async (cid: string): Promise<string> => {
+        try {
+            const transactionHash = await blockchainRepository.storeCID(cid);
+            if (!transactionHash) {
+                throw new HttpError(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    'Failed to store cid to blockchain'
+                );
+            }
+            return transactionHash;
+        } catch (error: any) {
+            if (error instanceof HttpError) {
+                throw error;
+            }
+            logger.error(
+                'Service: Unexpected error occurred in storeCIDToBlockchain',
+                {
+                    error: error?.message ?? error,
+                }
+            );
+            throw new HttpError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                'Failed to store cid to blockchain'
+            );
+        }
+    };
+
+    public uploadFileToIPFS = async (
+        filePath: string
+    ): Promise<{
+        cid: string;
+        fileSize: number;
+    }> => {
+        try {
+            const result = await ipfsRepository.uploadFileToIPFS(filePath);
+            if (!result) {
+                throw new HttpError(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    'Failed to upload file to IPFS'
+                );
+            }
+            return result;
+        } catch (error: any) {
+            if (error instanceof HttpError) {
+                throw error;
+            }
+            logger.error(
+                'Blockchain Service: Unexpected error occurred in uploadFileToIPFS',
+                {
+                    error: error?.message ?? error,
+                }
+            );
+            throw new HttpError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                'Failed to upload file to IPFS'
+            );
+        }
+    };
+
+    public getTransactionStatus = async (hash: string): Promise<object> => {
+        const status = await blockchainRepository.getTransactionStatus(hash);
+        return status ?? null;
     };
 }
 
