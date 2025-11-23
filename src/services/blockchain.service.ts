@@ -79,6 +79,7 @@ class BlockchainService {
     ): Promise<{
         cid: string;
         fileSize: number;
+        originalName: string;
     }> => {
         try {
             const result = await ipfsRepository.uploadFileToIPFS(filePath);
@@ -102,6 +103,33 @@ class BlockchainService {
             throw new HttpError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 'Failed to upload file to IPFS'
+            );
+        }
+    };
+
+    public downloadFileFromIPFS = async (cid: string): Promise<Buffer> => {
+        try {
+            const buffer = await ipfsRepository.downloadFileFromIPFS(cid);
+            if (!buffer) {
+                throw new HttpError(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    'Failed to download file from IPFS'
+                );
+            }
+            return buffer;
+        } catch (error: any) {
+            if (error instanceof HttpError) {
+                throw error;
+            }
+            logger.error(
+                'Blockchain Service: Unexpected error occurred in downloadFileFromIPFS',
+                {
+                    error: error?.message ?? error,
+                }
+            );
+            throw new HttpError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                'Failed to download file from IPFS'
             );
         }
     };

@@ -2,6 +2,7 @@ import blockchainService, { PublicUser } from '../services/blockchain.service';
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import HttpStatus from '../constants/status.constant';
+import isValidCID from '../utilities/isValidCID.utility';
 
 /**
  * @swagger
@@ -302,11 +303,10 @@ class BlockchainController {
     public storeCIDToBlockchain = asyncHandler(
         async (req: Request, res: Response) => {
             const { cid } = req.body;
-            //TODO: have to include checks for cid structure
-            if (!cid) {
+            if (!cid || !isValidCID(cid)) {
                 res.status(HttpStatus.BAD_REQUEST).json({
                     success: false,
-                    message: 'cid is required',
+                    message: 'cid is required or is not valid',
                     transactionHash: null,
                 });
             }
@@ -346,6 +346,37 @@ class BlockchainController {
                 message: 'Successfully uploaded file to IPFS',
                 data: result,
             });
+        }
+    );
+
+    public downloadFileFromIPFS = asyncHandler(
+        async (req: Request, res: Response) => {
+            const { cid } = req.body;
+            if (!cid || !isValidCID(cid)) {
+                res.status(HttpStatus.BAD_REQUEST).json({
+                    success: false,
+                    message: 'cid is required or is not valid',
+                    data: null,
+                });
+                return;
+            }
+            const fileBuffer = await blockchainService.downloadFileFromIPFS(
+                cid
+            );
+            if (!fileBuffer) {
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                    success: false,
+                    message: 'Failed to download file from IPFS',
+                    data: null,
+                });
+                return;
+            }
+            res.setHeader('Content-Type', 'application/octet-stream');
+            res.setHeader(
+                'Content-Disposition',
+                `attachment; filename="${cid}"`
+            );
+            res.status(HttpStatus.OK).send(fileBuffer);
         }
     );
 }

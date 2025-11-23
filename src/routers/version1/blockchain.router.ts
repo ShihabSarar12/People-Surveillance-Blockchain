@@ -22,4 +22,9 @@ blockchainRouter.post(
     blockchainController.uploadVideoToIPFS
 );
 
+blockchainRouter.post(
+    '/download-video',
+    blockchainController.downloadFileFromIPFS
+);
+
 export default blockchainRouter;
